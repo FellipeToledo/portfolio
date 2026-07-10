@@ -1,3 +1,96 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   Estilos globais — tema "espaço profundo" (deep space) com acento ciano.
+   Tailwind v4 + design tokens via @theme.
+   ========================================================================== */
 
 @import 'tailwindcss';
+
+@theme {
+  /* Fundos (do mais escuro ao mais claro) */
+  --color-space-950: #04060d;
+  --color-space-900: #070b16;
+  --color-space-850: #0b1120;
+  --color-space-800: #111a2e;
+  --color-space-700: #1b2740;
+
+  /* Acento ciano/nebulosa */
+  --color-accent-400: #38bdf8;
+  --color-accent-500: #22d3ee;
+  --color-accent-600: #06b6d4;
+  --color-nebula-500: #6366f1; /* violeta de apoio p/ gradientes */
+
+  /* Texto */
+  --color-ink-100: #e6edf7;
+  --color-ink-300: #aebdd4;
+  --color-ink-500: #7387a6;
+
+  /* Tipografia */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-space-950);
+  color: var(--color-ink-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Brilho suave de "nebulosa" espalhado pelo fundo */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 40rem at 15% 8%, color-mix(in srgb, var(--color-accent-500) 12%, transparent), transparent 70%),
+    radial-gradient(50rem 40rem at 85% 30%, color-mix(in srgb, var(--color-nebula-500) 14%, transparent), transparent 70%),
+    radial-gradient(60rem 50rem at 50% 100%, color-mix(in srgb, var(--color-accent-600) 10%, transparent), transparent 70%);
+}
+
+/* Barra de rolagem estilizada */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--color-space-900); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-space-700);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-accent-600); }
+
+/* Seleção de texto */
+::selection {
+  background: color-mix(in srgb, var(--color-accent-500) 35%, transparent);
+  color: #fff;
+}
+
+/* Utilitário: texto com gradiente do acento */
+.text-gradient {
+  background: linear-gradient(120deg, var(--color-accent-400), var(--color-nebula-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animação de entrada ao rolar (usada com IntersectionObserver) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
